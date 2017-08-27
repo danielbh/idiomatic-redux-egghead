@@ -1,0 +1,1 @@
+From following along in Dan Abromav's ["Building React Applications with Idiomatic Redux" course on egghead.io](https://egghead.io/courses/building-react-applications-with-idiomatic-redux). Updated to work for current dependency APIs.
