@@ -44,4 +44,4 @@ export const getVisibleTodos = (state, filter) => {
     default:
       throw new Error(`Unknown filter: ${filter}.`);
   }
-};
+}
