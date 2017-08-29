@@ -1,18 +1,17 @@
 import { createStore, applyMiddleware } from 'redux';
-import todoApp from './reducers';
-import promise from 'redux-promise';
 import { createLogger } from 'redux-logger';
+import thunk from 'redux-thunk';
+import todoApp from './reducers';
 
 const configureStore = () => {
-  const middlewares = [promise];
+  const middlewares = [thunk];
   if (process.env.NODE_ENV !== 'production') {
     middlewares.push(createLogger());
   }
 
   return createStore(
     todoApp,
-    // Add persisted state before enhancers
-    applyMiddleware(...middlewares) // enhancer
+    applyMiddleware(...middlewares)
   );
 };
 
