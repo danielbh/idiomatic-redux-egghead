@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import * as actions from '../actions';
-import { getVisibleTodos, getIsFetching } from '../reducers';
+import { getVisibleTodos, getErrorMessage, getIsFetching } from '../reducers';
 import TodoList from '../components/TodoList';
+import FetchError from '../components/FetchError';
+
 
 class VisibleTodoList extends Component {
   componentDidMount() {
@@ -19,13 +21,21 @@ class VisibleTodoList extends Component {
 
   fetchData() {
     const { filter, fetchTodos } = this.props;
-    fetchTodos(filter).then(() => console.log('done'));
+    fetchTodos(filter);
   }
 
   render() {
-    const { isFetching, toggleTodo, todos } = this.props;
+    const { isFetching, errorMessage, toggleTodo, todos } = this.props;
     if (isFetching && !todos.length) {
       return <p>Loading...</p>;
+    }
+    if (errorMessage && !todos.length) {
+      return (
+        <FetchError
+          message={errorMessage}
+          onRetry={() => this.fetchData()}
+        />
+      );
     }
 
     return (
@@ -39,6 +49,7 @@ class VisibleTodoList extends Component {
 
 VisibleTodoList.propTypes = {
   filter: PropTypes.oneOf(['all', 'active', 'completed']).isRequired,
+  errorMessage: PropTypes.string,
   todos: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
   fetchTodos: PropTypes.func.isRequired,
@@ -49,6 +60,7 @@ const mapStateToProps = (state, { match }) => {
   const filter = match.params.filter || 'all';
   return {
     isFetching: getIsFetching(state, filter),
+    errorMessage: getErrorMessage(state, filter),
     todos: getVisibleTodos(state, filter),
     filter,
   };
